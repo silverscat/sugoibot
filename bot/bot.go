@@ -82,10 +82,7 @@ func (b *Bot) handleDefault(ev *slack.MessageEvent) error {
 func (b *Bot) handleMatsuya(ev *slack.MessageEvent) error {
 	menu, err := extapi.GetRandom()
 	if err != nil {
-		log.Println(err)
-		butimili := "エラーあああああああああああああああああああああああああああああああ！！！！！！！！！！！ (ﾌﾞﾘﾌﾞﾘﾌﾞﾘﾌﾞﾘｭﾘｭﾘｭﾘｭﾘｭﾘｭ！！！！！！ﾌﾞﾂﾁﾁﾌﾞﾌﾞﾌﾞﾁﾁﾁﾁﾌﾞﾘﾘｲﾘﾌﾞﾌﾞﾌﾞﾌﾞｩｩｩｩｯｯｯ！！！！！！！)"
-		b.rtm.SendMessage(b.rtm.NewOutgoingMessage(butimili, ev.Channel))
-		return err
+		return b.handleError(err, ev)
 	}
 	price := strconv.Itoa(menu.Price)
 	resp := "*" + menu.Name + "*\n*" + price + "円*\n" + menu.Description + "\n" + menu.ImageURL
@@ -96,10 +93,7 @@ func (b *Bot) handleMatsuya(ev *slack.MessageEvent) error {
 func (b *Bot) handleTokyoMetroDelay(ev *slack.MessageEvent) error {
 	lines, err := extapi.GetLineInformationArray()
 	if err != nil {
-		log.Println(err)
-		butimili := "エラーあああああああああああああああああああああああああああああああ！！！！！！！！！！！ (ﾌﾞﾘﾌﾞﾘﾌﾞﾘﾌﾞﾘｭﾘｭﾘｭﾘｭﾘｭﾘｭ！！！！！！ﾌﾞﾂﾁﾁﾌﾞﾌﾞﾌﾞﾁﾁﾁﾁﾌﾞﾘﾘｲﾘﾌﾞﾌﾞﾌﾞﾌﾞｩｩｩｩｯｯｯ！！！！！！！)"
-		b.rtm.SendMessage(b.rtm.NewOutgoingMessage(butimili, ev.Channel))
-		return err
+		return b.handleError(err, ev)
 	}
 
 	var buffer bytes.Buffer
@@ -118,4 +112,11 @@ func (b *Bot) handleTokyoMetroDelay(ev *slack.MessageEvent) error {
 	}
 	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(buffer.String(), ev.Channel))
 	return nil
+}
+
+func (b *Bot) handleError(err error, ev *slack.MessageEvent) error {
+	log.Println(err)
+	butimili := "エラーあああああああああああああああああああああああああああああああ！！！！！！！！！！！ (ﾌﾞﾘﾌﾞﾘﾌﾞﾘﾌﾞﾘｭﾘｭﾘｭﾘｭﾘｭﾘｭ！！！！！！ﾌﾞﾂﾁﾁﾌﾞﾌﾞﾌﾞﾁﾁﾁﾁﾌﾞﾘﾘｲﾘﾌﾞﾌﾞﾌﾞﾌﾞｩｩｩｩｯｯｯ！！！！！！！)"
+	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(butimili, ev.Channel))
+	return err
 }
