@@ -1,13 +1,10 @@
 package bot
 
 import (
-	"bytes"
 	"log"
-	"strconv"
 	"strings"
 
 	"github.com/TinyKitten/sugoibot/env"
-	"github.com/TinyKitten/sugoibot/extapi"
 	"github.com/nlopes/slack"
 )
 
@@ -67,50 +64,9 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 	}
 }
 
-func (b *Bot) handleDappun(ev *slack.MessageEvent) error {
-	butimili := "うおおおおおおおおおおおおあああああああああああああああああああああああああああああああ！！！！！！！！！！！ (ﾌﾞﾘﾌﾞﾘﾌﾞﾘﾌﾞﾘｭﾘｭﾘｭﾘｭﾘｭﾘｭ！！！！！！ﾌﾞﾂﾁﾁﾌﾞﾌﾞﾌﾞﾁﾁﾁﾁﾌﾞﾘﾘｲﾘﾌﾞﾌﾞﾌﾞﾌﾞｩｩｩｩｯｯｯ！！！！！！！)"
-	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(butimili, ev.Channel))
-	return nil
-}
-
 func (b *Bot) handleDefault(ev *slack.MessageEvent) error {
 	nasa := "や、そんなコマンドのNASA✋"
 	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(nasa, ev.Channel))
-	return nil
-}
-
-func (b *Bot) handleMatsuya(ev *slack.MessageEvent) error {
-	menu, err := extapi.GetRandom()
-	if err != nil {
-		return b.handleError(err, ev)
-	}
-	price := strconv.Itoa(menu.Price)
-	resp := "*" + menu.Name + "*\n*" + price + "円*\n" + menu.Description + "\n" + menu.ImageURL
-	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(resp, ev.Channel))
-	return nil
-}
-
-func (b *Bot) handleTokyoMetroDelay(ev *slack.MessageEvent) error {
-	lines, err := extapi.GetLineInformationArray()
-	if err != nil {
-		return b.handleError(err, ev)
-	}
-
-	var buffer bytes.Buffer
-	for i, line := range lines {
-		lineName := extapi.ConvertODPTRailwayToJP(line.Railway)
-		var innerBuffer bytes.Buffer
-		innerBuffer.WriteString("*")
-		innerBuffer.WriteString(lineName)
-		innerBuffer.WriteString("*")
-		innerBuffer.WriteString(" ")
-		innerBuffer.WriteString(line.TrainInformationText)
-		if i != len(lines) {
-			innerBuffer.WriteString("\n")
-		}
-		buffer.WriteString(innerBuffer.String())
-	}
-	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(buffer.String(), ev.Channel))
 	return nil
 }
 
