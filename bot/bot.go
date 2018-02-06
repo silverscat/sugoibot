@@ -1,8 +1,10 @@
 package bot
 
 import (
+	"bytes"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/TinyKitten/sugoibot/env"
 	"github.com/TinyKitten/sugoibot/extapi"
@@ -45,12 +47,19 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 	if ev.User == ev.BotID {
 		return nil
 	}
+	cmdPrefixIndex := strings.Index(ev.Text, "./")
+	if cmdPrefixIndex == -1 || cmdPrefixIndex != 0 {
+		return nil
+	}
 	switch ev.Text {
 	case "./dappun":
 		b.handleDappun(ev)
 		return nil
 	case "./matsuya":
 		b.handleMatsuya(ev)
+		return nil
+	case "./tokyometro_delay":
+		b.handleTokyoMetroDelay(ev)
 		return nil
 	default:
 		b.handleDefault(ev)
@@ -76,9 +85,37 @@ func (b *Bot) handleMatsuya(ev *slack.MessageEvent) error {
 		log.Println(err)
 		butimili := "エラーあああああああああああああああああああああああああああああああ！！！！！！！！！！！ (ﾌﾞﾘﾌﾞﾘﾌﾞﾘﾌﾞﾘｭﾘｭﾘｭﾘｭﾘｭﾘｭ！！！！！！ﾌﾞﾂﾁﾁﾌﾞﾌﾞﾌﾞﾁﾁﾁﾁﾌﾞﾘﾘｲﾘﾌﾞﾌﾞﾌﾞﾌﾞｩｩｩｩｯｯｯ！！！！！！！)"
 		b.rtm.SendMessage(b.rtm.NewOutgoingMessage(butimili, ev.Channel))
+		return err
 	}
 	price := strconv.Itoa(menu.Price)
 	resp := "*" + menu.Name + "*\n*" + price + "円*\n" + menu.Description + "\n" + menu.ImageURL
 	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(resp, ev.Channel))
+	return nil
+}
+
+func (b *Bot) handleTokyoMetroDelay(ev *slack.MessageEvent) error {
+	lines, err := extapi.GetLineInformationArray()
+	if err != nil {
+		log.Println(err)
+		butimili := "エラーあああああああああああああああああああああああああああああああ！！！！！！！！！！！ (ﾌﾞﾘﾌﾞﾘﾌﾞﾘﾌﾞﾘｭﾘｭﾘｭﾘｭﾘｭﾘｭ！！！！！！ﾌﾞﾂﾁﾁﾌﾞﾌﾞﾌﾞﾁﾁﾁﾁﾌﾞﾘﾘｲﾘﾌﾞﾌﾞﾌﾞﾌﾞｩｩｩｩｯｯｯ！！！！！！！)"
+		b.rtm.SendMessage(b.rtm.NewOutgoingMessage(butimili, ev.Channel))
+		return err
+	}
+
+	var buffer bytes.Buffer
+	for i, line := range lines {
+		lineName := extapi.ConvertODPTRailwayToJP(line.Railway)
+		var innerBuffer bytes.Buffer
+		innerBuffer.WriteString("*")
+		innerBuffer.WriteString(lineName)
+		innerBuffer.WriteString("*")
+		innerBuffer.WriteString(" ")
+		innerBuffer.WriteString(line.TrainInformationText)
+		if i != len(lines) {
+			innerBuffer.WriteString("\n")
+		}
+		buffer.WriteString(innerBuffer.String())
+	}
+	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(buffer.String(), ev.Channel))
 	return nil
 }
