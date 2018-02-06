@@ -48,6 +48,13 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 	if cmdPrefixIndex == -1 || cmdPrefixIndex != 0 {
 		return nil
 	}
+	// 引数が必要なコマンド
+	delayIndex := strings.Index(ev.Text, "./delayline ")
+	if delayIndex != -1 || delayIndex == 0 {
+		b.handleDelay(ev)
+		return nil
+	}
+	// 引数が必要ないコマンド
 	switch ev.Text {
 	case "./dappun":
 		b.handleDappun(ev)
