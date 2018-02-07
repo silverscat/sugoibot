@@ -49,26 +49,30 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 		return nil
 	}
 	// 引数が必要なコマンド
+	// 大抵の路線の遅延
 	delayIndex := strings.Index(ev.Text, "./delayline ")
 	if delayIndex != -1 || delayIndex == 0 {
 		b.handleDelay(ev)
 		return nil
 	}
 	// 引数が必要ないコマンド
-	switch ev.Text {
-	case "./dappun":
+	// 脱糞
+	if strings.HasPrefix(ev.Text, "./dappun") {
 		b.handleDappun(ev)
 		return nil
-	case "./matsuya":
+	}
+	// 松屋
+	if strings.HasPrefix(ev.Text, "./matsuya") {
 		b.handleMatsuya(ev)
 		return nil
-	case "./tokyometro_delay":
+	}
+	// 東京メトロ遅延
+	if strings.HasPrefix(ev.Text, "./tokyometro_delay") {
 		b.handleTokyoMetroDelay(ev)
 		return nil
-	default:
-		b.handleDefault(ev)
-		return nil
 	}
+	b.handleDefault(ev)
+	return nil
 }
 
 func (b *Bot) handleDefault(ev *slack.MessageEvent) error {
