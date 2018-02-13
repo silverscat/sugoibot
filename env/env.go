@@ -24,3 +24,9 @@ func Debug() bool {
 	}
 	return false
 }
+
+// GetAdminID 管理者のSlack上のIDを取得する
+func GetAdminID() string {
+	LoadEnv()
+	return os.Getenv("ADMIN_ID")
+}

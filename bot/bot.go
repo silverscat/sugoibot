@@ -49,9 +49,35 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 		return nil
 	}
 	// 引数が必要なコマンド
+	// 管理者専用
+	if ev.User == env.GetAdminID() {
+		addUserIndex := strings.Index(ev.Text, "./adduser ")
+		if hasArgument(addUserIndex) {
+			err := b.handleAddUserAdmin(ev)
+			if err != nil {
+				b.handleError(err, ev)
+			}
+			return err
+		}
+	} else {
+		// fallback
+		addUserIndex := strings.Index(ev.Text, "./adduser ")
+		if hasArgument(addUserIndex) {
+			b.rtm.SendMessage(b.rtm.NewOutgoingMessage("実行権限がありません。", ev.Channel))
+			return nil
+		}
+	}
+	getUserByCodeIndex := strings.Index(ev.Text, "./getMemberByCode ")
+	if hasArgument(getUserByCodeIndex) {
+		err := b.handleGetUserByCode(ev)
+		if err != nil {
+			b.handleError(err, ev)
+		}
+		return err
+	}
 	// 大抵の路線の遅延
 	delayIndex := strings.Index(ev.Text, "./delayline ")
-	if delayIndex != -1 || delayIndex == 0 {
+	if hasArgument(delayIndex) {
 		return b.handleDelay(ev)
 	}
 	// 引数が必要ないコマンド
@@ -82,7 +108,13 @@ func (b *Bot) handleDefault(ev *slack.MessageEvent) error {
 
 func (b *Bot) handleError(err error, ev *slack.MessageEvent) error {
 	log.Println(err)
-	butimili := "エラーあああああああああああああああああああああああああああああああ！！！！！！！！！！！ (ﾌﾞﾘﾌﾞﾘﾌﾞﾘﾌﾞﾘｭﾘｭﾘｭﾘｭﾘｭﾘｭ！！！！！！ﾌﾞﾂﾁﾁﾌﾞﾌﾞﾌﾞﾁﾁﾁﾁﾌﾞﾘﾘｲﾘﾌﾞﾌﾞﾌﾞﾌﾞｩｩｩｩｯｯｯ！！！！！！！)"
-	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(butimili, ev.Channel))
+	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(err.Error(), ev.Channel))
 	return err
+}
+
+func hasArgument(index int) bool {
+	if index != -1 || index == 0 {
+		return true
+	}
+	return false
 }
