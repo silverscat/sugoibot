@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"log"
 	"strings"
 
 	"github.com/TinyKitten/sugoibot/extapi"
@@ -9,7 +8,7 @@ import (
 	"github.com/nlopes/slack"
 )
 
-func (b *Bot) handleGetUserByCode(ev *slack.MessageEvent) error {
+func (b *Bot) handleGetMemberByCode(ev *slack.MessageEvent) error {
 	code := strings.Replace(ev.Text, "./getMemberByCode ", "", 1)
 	codeSpaces := strings.Fields(code)
 	if len(codeSpaces) != 1 {
@@ -21,7 +20,6 @@ func (b *Bot) handleGetUserByCode(ev *slack.MessageEvent) error {
 	if err != nil {
 		return err
 	}
-	log.Println(member)
 	memberPrivStr := ""
 	if member.Executive {
 		memberPrivStr = "取締役メンバー"
