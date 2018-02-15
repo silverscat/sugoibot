@@ -14,16 +14,29 @@ type TKAPIMemberModel struct {
 	Twitter     string    `json:"twitter"`
 	Role        string    `json:"role"`
 	Until       time.Time `json:"until"`
+	Slack       string    `json:"slack"`
 }
 
-// GraphQLResponse TeamKitten APIのメンバーレスポンス
-type GraphQLResponse struct {
-	Data   *GraphQLData    `json:"data,omitempty"`
-	Errors []*GraphQLError `json:"errors,omitempty"`
+// GraphQLMemberResponse TeamKitten APIのメンバーレスポンス
+type GraphQLMemberResponse struct {
+	Data   *GraphQLMemberData `json:"data,omitempty"`
+	Errors []*GraphQLError    `json:"errors,omitempty"`
 }
 
-type GraphQLData struct {
+// GraphQLMembersResponse TeamKitten APIのメンバーレスポンス
+type GraphQLMembersResponse struct {
+	Data   *GraphQLMembersData `json:"data,omitempty"`
+	Errors []*GraphQLError     `json:"errors,omitempty"`
+}
+
+// GraphQLMemberData TeamKitten APIのメンバーデータ
+type GraphQLMemberData struct {
 	Member *TKAPIMemberModel `json:"member,omitempty"`
+}
+
+// GraphQLMembersData TeamKitten APIのメンバーデータ
+type GraphQLMembersData struct {
+	Members []*TKAPIMemberModel `json:"members,omitempty"`
 }
 
 // GraphQLError GraphQLエラー

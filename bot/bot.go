@@ -67,9 +67,17 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 			return nil
 		}
 	}
-	getUserByCodeIndex := strings.Index(ev.Text, "./getMemberByCode ")
-	if hasArgument(getUserByCodeIndex) {
-		err := b.handleGetUserByCode(ev)
+	getMemberByCodeIndex := strings.Index(ev.Text, "./getMemberByCode ")
+	if hasArgument(getMemberByCodeIndex) {
+		err := b.handleGetMemberByCode(ev)
+		if err != nil {
+			b.handleError(err, ev)
+		}
+		return err
+	}
+	getMemberByReplyIndex := strings.Index(ev.Text, "./getMemberByReply ")
+	if hasArgument(getMemberByReplyIndex) {
+		err := b.handleGetMemberByReply(ev)
 		if err != nil {
 			b.handleError(err, ev)
 		}
@@ -107,7 +115,6 @@ func (b *Bot) handleDefault(ev *slack.MessageEvent) error {
 }
 
 func (b *Bot) handleError(err error, ev *slack.MessageEvent) error {
-	log.Println(err)
 	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(err.Error(), ev.Channel))
 	return err
 }
