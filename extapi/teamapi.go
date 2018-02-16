@@ -3,6 +3,7 @@ package extapi
 import (
 	"encoding/json"
 	"errors"
+	"log"
 
 	"github.com/TinyKitten/sugoibot/constant"
 	"github.com/TinyKitten/sugoibot/models"
@@ -26,7 +27,7 @@ func GetMemberByCode(code string) (*models.TKAPIMemberModel, error) {
 		  }
 	  }
 	  `
-	url := "https://teamkitten-193615.appspot.com/"
+	url := "https://api.teamkitten.tk/"
 	body, err := makeGraphQLRequest(url, query)
 	if err != nil {
 		return nil, err
@@ -44,6 +45,7 @@ func GetMemberByCode(code string) (*models.TKAPIMemberModel, error) {
 
 // GetMemberBySlackID SlackIDでメンバーを検索
 func GetMemberBySlackID(id string) (*models.TKAPIMemberModel, error) {
+	log.Println(id)
 	query := `
 		{
 		  members {
@@ -61,7 +63,7 @@ func GetMemberBySlackID(id string) (*models.TKAPIMemberModel, error) {
 		  }
 	  }
 	  `
-	url := "https://teamkitten-193615.appspot.com/"
+	url := "https://api.teamkitten.tk/"
 	body, err := makeGraphQLRequest(url, query)
 	if err != nil {
 		return nil, err
