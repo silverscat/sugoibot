@@ -9,7 +9,7 @@ type TKAPIMemberModel struct {
 	Description string    `json:"description"`
 	Executive   bool      `json:"executive"`
 	Name        string    `json:"name"`
-	Seccession  bool      `json:"seccession"`
+	Secession   bool      `json:"secession"`
 	Since       time.Time `json:"since"`
 	Twitter     string    `json:"twitter"`
 	Role        string    `json:"role"`

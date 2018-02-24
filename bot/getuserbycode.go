@@ -28,7 +28,7 @@ func (b *Bot) handleGetMemberByCode(ev *slack.MessageEvent) error {
 	}
 	msg := code + ":\n" + member.Role + "担当\n" + member.Name + "\n" + memberPrivStr
 
-	if member.Seccession {
+	if member.Secession {
 		msg += "\n脱退済みメンバー"
 		b.rtm.SendMessage(b.rtm.NewOutgoingMessage(msg, ev.Channel))
 		return nil
