@@ -101,7 +101,7 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 	if strings.HasPrefix(ev.Text, "./tokyometro_delay") {
 		return b.handleTokyoMetroDelay(ev)
 	}
-	// デバッグ用 ホスト名を吐く
+	// ヘルプ
 	if strings.HasPrefix(ev.Text, "./help") {
 		return b.handleHelp(ev)
 	}
