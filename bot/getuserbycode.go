@@ -21,18 +21,27 @@ func (b *Bot) handleGetMemberByCode(ev *slack.MessageEvent) error {
 		return err
 	}
 	memberPrivStr := ""
+	color := ""
 	if member.Executive {
 		memberPrivStr = "取締役メンバー"
+		color = "#ED1A3D"
 	} else {
 		memberPrivStr = "一般メンバー"
+		color = "#008000"
 	}
-	msg := code + ":\n" + member.Role + "担当\n" + member.Name + "\n" + memberPrivStr
+	msg := "*" + member.Code + "*\n*" + member.Name + "*\n" + memberPrivStr + "\n" + member.Role + "担当\n\n" + member.Description
 
 	if member.Secession {
-		msg += "\n脱退済みメンバー"
-		b.rtm.SendMessage(b.rtm.NewOutgoingMessage(msg, ev.Channel))
-		return nil
+		memberPrivStr += "(脱退済み)"
+		color = "#000000"
 	}
-	b.rtm.SendMessage(b.rtm.NewOutgoingMessage(msg, ev.Channel))
+
+	attachment := slack.Attachment{
+		Color: color,
+		Text:  msg,
+	}
+	params := slack.PostMessageParameters{}
+	params.Attachments = []slack.Attachment{attachment}
+	b.client.PostMessage(ev.Channel, "", params)
 	return nil
 }
