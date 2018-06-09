@@ -1,2 +1,5 @@
 # sugoibot
 すごいBOT
+
+> TinyKitten
+> ぶっちゃけすごいBOTのどこがすごいのかわからない
