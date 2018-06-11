@@ -83,11 +83,6 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 		}
 		return err
 	}
-	// 大抵の路線の遅延
-	delayIndex := strings.Index(ev.Text, "./delayline ")
-	if hasArgument(delayIndex) {
-		return b.handleDelay(ev)
-	}
 	// 引数が必要ないコマンド
 	// 脱糞
 	if strings.HasPrefix(ev.Text, "./dappun") {
@@ -97,17 +92,9 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 	if strings.HasPrefix(ev.Text, "./matsuya") {
 		return b.handleMatsuya(ev)
 	}
-	// 東京メトロ遅延
-	if strings.HasPrefix(ev.Text, "./tokyometro_delay") {
-		return b.handleTokyoMetroDelay(ev)
-	}
 	// ヘルプ
 	if strings.HasPrefix(ev.Text, "./help") {
 		return b.handleHelp(ev)
-	}
-	// デバッグ用 ホスト名を吐く
-	if strings.HasPrefix(ev.Text, "./debug_myip") {
-		return b.handleDebugMyHost(ev)
 	}
 	return b.handleDefault(ev)
 }
