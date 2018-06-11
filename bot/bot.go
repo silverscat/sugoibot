@@ -83,6 +83,17 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 		}
 		return err
 	}
+
+	// TODO管理
+	todoIndex := strings.Index(ev.Text, "./todo ")
+	if hasArgument(todoIndex) {
+		err := b.handleTodo(ev)
+		if err != nil {
+			b.handleError(err, ev)
+		}
+		return err
+	}
+
 	// 引数が必要ないコマンド
 	// 脱糞
 	if strings.HasPrefix(ev.Text, "./dappun") {
