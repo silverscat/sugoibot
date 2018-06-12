@@ -1,8 +1,6 @@
 package dao
 
 import (
-	"strconv"
-
 	"github.com/TinyKitten/sugoibot/models"
 )
 
@@ -106,21 +104,18 @@ func GetTaskByID(id int64) (*models.Todo, error) {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("select id, member_code, task_name, completed from todo where id=" + strconv.FormatInt(id, 10))
+	stmt, err := db.Prepare("select id, member_code, task_name, completed from todo where id=?")
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer stmt.Close()
 	todo := &models.Todo{}
-	if !rows.Next() {
-		return nil, nil
+
+	err = stmt.QueryRow(id).Scan(&todo.ID, &todo.MemberCode, &todo.TaskName, &todo.Completed)
+	if err != nil {
+		return nil, err
 	}
-	for rows.Next() {
-		err = rows.Scan(&todo.ID, &todo.MemberCode, &todo.TaskName, &todo.Completed)
-		if err != nil {
-			return nil, err
-		}
-	}
+
 	return todo, nil
 }
 

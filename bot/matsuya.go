@@ -7,7 +7,7 @@ import (
 	"github.com/nlopes/slack"
 )
 
-func (b *Bot) handleMatsuya(ev *slack.MessageEvent) error {
+func (b *Bot) handleMatsuya(ev *slack.MessageEvent, args ...string) error {
 	menu, err := extapi.GetRandom()
 	if err != nil {
 		return b.handleError(err, ev)

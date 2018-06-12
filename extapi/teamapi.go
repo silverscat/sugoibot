@@ -81,5 +81,5 @@ func GetMemberBySlackID(id string) (*models.TKAPIMemberModel, error) {
 		}
 	}
 
-	return nil, errors.New(constant.ERR_MEMBER_NOT_FOUND)
+	return nil, constant.ERR_MEMBER_NOT_FOUND
 }

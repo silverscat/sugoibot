@@ -1,22 +1,18 @@
 package bot
 
 import (
-	"strings"
-
 	"github.com/TinyKitten/sugoibot/extapi"
 
 	"github.com/nlopes/slack"
 )
 
-func (b *Bot) handleGetMemberByCode(ev *slack.MessageEvent) error {
-	code := strings.Replace(ev.Text, "./getMemberByCode ", "", 1)
-	codeSpaces := strings.Fields(code)
-	if len(codeSpaces) != 1 {
+func (b *Bot) handleGetMemberByCode(ev *slack.MessageEvent, args ...string) error {
+	if len(args) != 0 {
 		b.rtm.SendMessage(b.rtm.NewOutgoingMessage("メンバーコードを指定してください。", ev.Channel))
 		return nil
 	}
 
-	member, err := extapi.GetMemberByCode(code)
+	member, err := extapi.GetMemberByCode(args[0])
 	if err != nil {
 		return err
 	}

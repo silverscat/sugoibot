@@ -48,66 +48,37 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 	if cmdPrefixIndex == -1 || cmdPrefixIndex != 0 {
 		return nil
 	}
-	// 引数が必要なコマンド
-	// 管理者専用
-	if ev.User == env.GetAdminID() {
-		addUserIndex := strings.Index(ev.Text, "./adduser ")
-		if hasArgument(addUserIndex) {
-			err := b.handleAddUserAdmin(ev)
-			if err != nil {
-				b.handleError(err, ev)
-			}
-			return err
-		}
-	} else {
-		// fallback
-		addUserIndex := strings.Index(ev.Text, "./adduser ")
-		if hasArgument(addUserIndex) {
-			b.rtm.SendMessage(b.rtm.NewOutgoingMessage("実行権限がありません。", ev.Channel))
-			return nil
-		}
-	}
-	getMemberByCodeIndex := strings.Index(ev.Text, "./getMemberByCode ")
-	if hasArgument(getMemberByCodeIndex) {
-		err := b.handleGetMemberByCode(ev)
-		if err != nil {
-			b.handleError(err, ev)
-		}
-		return err
-	}
-	getMemberByReplyIndex := strings.Index(ev.Text, "./getMemberByReply ")
-	if hasArgument(getMemberByReplyIndex) {
-		err := b.handleGetMemberByReply(ev)
-		if err != nil {
-			b.handleError(err, ev)
-		}
-		return err
-	}
 
-	// TODO管理
-	todoIndex := strings.Index(ev.Text, "./todo ")
-	if hasArgument(todoIndex) {
-		err := b.handleTodo(ev)
+	splitted := strings.Fields(ev.Text)
+
+	switch splitted[0] {
+	case "./getMemberByCode":
+		err := b.handleGetMemberByCode(ev, splitted[1:]...)
 		if err != nil {
 			b.handleError(err, ev)
 		}
 		return err
+	case "./getMemberByReply":
+		err := b.handleGetMemberByReply(ev, splitted[1:]...)
+		if err != nil {
+			b.handleError(err, ev)
+		}
+		return err
+	case "./todo":
+		err := b.handleTodo(ev, splitted[1:]...)
+		if err != nil {
+			b.handleError(err, ev)
+		}
+		return err
+	case "./dappun":
+		return b.handleDappun(ev, splitted[1:]...)
+	case "./matsuya":
+		return b.handleMatsuya(ev, splitted[1:]...)
+	case "./help":
+		return b.handleHelp(ev, splitted[1:]...)
+	default:
+		return b.handleDefault(ev)
 	}
-
-	// 引数が必要ないコマンド
-	// 脱糞
-	if strings.HasPrefix(ev.Text, "./dappun") {
-		return b.handleDappun(ev)
-	}
-	// 松屋
-	if strings.HasPrefix(ev.Text, "./matsuya") {
-		return b.handleMatsuya(ev)
-	}
-	// ヘルプ
-	if strings.HasPrefix(ev.Text, "./help") {
-		return b.handleHelp(ev)
-	}
-	return b.handleDefault(ev)
 }
 
 func (b *Bot) handleDefault(ev *slack.MessageEvent) error {
