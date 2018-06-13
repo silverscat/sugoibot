@@ -2,7 +2,7 @@ package bot
 
 import "github.com/nlopes/slack"
 
-func (b *Bot) handleHelp(ev *slack.MessageEvent) error {
+func (b *Bot) handleHelp(ev *slack.MessageEvent, args ...string) error {
 	msg := `
 	*./getMenberByCode* _[メンバーコード]_
 	メンバーコードからプロフィールを取得します。

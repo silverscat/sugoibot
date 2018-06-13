@@ -2,7 +2,7 @@ package bot
 
 import "github.com/nlopes/slack"
 
-func (b *Bot) handleDappun(ev *slack.MessageEvent) error {
+func (b *Bot) handleDappun(ev *slack.MessageEvent, args ...string) error {
 	butimili := "*うおおおおおおおおおおおおあああああああああああああああああああああああああああああああ！！！！！！！！！！！ (ﾌﾞﾘﾌﾞﾘﾌﾞﾘﾌﾞﾘｭﾘｭﾘｭﾘｭﾘｭﾘｭ！！！！！！ﾌﾞﾂﾁﾁﾌﾞﾌﾞﾌﾞﾁﾁﾁﾁﾌﾞﾘﾘｲﾘﾌﾞﾌﾞﾌﾞﾌﾞｩｩｩｩｯｯｯ！！！！！！！)*"
 	attachment := slack.Attachment{
 		Color: "#994C00",

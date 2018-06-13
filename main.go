@@ -9,6 +9,7 @@ import (
 
 func main() {
 	env.LoadEnv()
+
 	slackToken := os.Getenv("SLACK_USER_TOKEN")
 	slackbot := bot.NewBot(slackToken)
 	slackbot.StartListenMessage()

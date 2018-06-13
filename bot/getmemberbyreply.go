@@ -7,16 +7,14 @@ import (
 	"github.com/nlopes/slack"
 )
 
-func (b *Bot) handleGetMemberByReply(ev *slack.MessageEvent) error {
-	code := strings.Replace(ev.Text, "./getMemberByReply ", "", 1)
-	codeSpaces := strings.Fields(code)
-	if len(codeSpaces) != 1 {
+func (b *Bot) handleGetMemberByReply(ev *slack.MessageEvent, args ...string) error {
+	if len(args) == 0 {
 		b.rtm.SendMessage(b.rtm.NewOutgoingMessage("メンバーコードを指定してください。", ev.Channel))
 		return nil
 	}
 
-	code = strings.TrimLeft(code, "<@")
-	code = strings.TrimRight(code, ">")
+	code := strings.TrimLeft(args[0], "<@")
+	code = strings.TrimRight(args[0], ">")
 	member, err := extapi.GetMemberBySlackID(code)
 	if err != nil {
 		return err

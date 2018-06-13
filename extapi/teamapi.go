@@ -3,7 +3,6 @@ package extapi
 import (
 	"encoding/json"
 	"errors"
-	"log"
 
 	"github.com/TinyKitten/sugoibot/constant"
 	"github.com/TinyKitten/sugoibot/models"
@@ -45,7 +44,6 @@ func GetMemberByCode(code string) (*models.TKAPIMemberModel, error) {
 
 // GetMemberBySlackID SlackIDでメンバーを検索
 func GetMemberBySlackID(id string) (*models.TKAPIMemberModel, error) {
-	log.Println(id)
 	query := `
 		{
 		  members {
@@ -83,5 +81,5 @@ func GetMemberBySlackID(id string) (*models.TKAPIMemberModel, error) {
 		}
 	}
 
-	return nil, errors.New(constant.ERR_MEMBER_NOT_FOUND)
+	return nil, constant.ERR_MEMBER_NOT_FOUND
 }
