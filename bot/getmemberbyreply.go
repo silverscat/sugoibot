@@ -1,8 +1,10 @@
 package bot
 
 import (
+	"errors"
 	"strings"
 
+	"github.com/TinyKitten/sugoibot/constant"
 	"github.com/TinyKitten/sugoibot/extapi"
 	"github.com/nlopes/slack"
 )
@@ -14,9 +16,12 @@ func (b *Bot) handleGetMemberByReply(ev *slack.MessageEvent, args ...string) err
 	}
 
 	code := strings.TrimLeft(args[0], "<@")
-	code = strings.TrimRight(args[0], ">")
+	code = strings.TrimRight(code, ">")
 	member, err := extapi.GetMemberBySlackID(code)
 	if err != nil {
+		if err == constant.ERR_MEMBER_NOT_FOUND {
+			return errors.New("メンバーが見つかりませんでした。")
+		}
 		return err
 	}
 	memberPrivStr := ""

@@ -1,19 +1,25 @@
 package bot
 
 import (
+	"errors"
+
+	"github.com/TinyKitten/sugoibot/constant"
 	"github.com/TinyKitten/sugoibot/extapi"
 
 	"github.com/nlopes/slack"
 )
 
 func (b *Bot) handleGetMemberByCode(ev *slack.MessageEvent, args ...string) error {
-	if len(args) != 0 {
+	if len(args) == 0 {
 		b.rtm.SendMessage(b.rtm.NewOutgoingMessage("メンバーコードを指定してください。", ev.Channel))
 		return nil
 	}
 
 	member, err := extapi.GetMemberByCode(args[0])
 	if err != nil {
+		if err == constant.ERR_MEMBER_NOT_FOUND {
+			return errors.New("メンバーが見つかりませんでした。")
+		}
 		return err
 	}
 	memberPrivStr := ""
