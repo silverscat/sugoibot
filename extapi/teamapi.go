@@ -24,7 +24,7 @@ func GetMemberByCode(code string) (*models.TKAPIMemberModel, error) {
 	if data.StatusCode == 404 {
 		return nil, constant.ERR_MEMBER_NOT_FOUND
 	}
-	if data.StatusCode != 404 {
+	if data.StatusCode != 404 && data.StatusCode != 200 {
 		return nil, constant.ERR_API_ERROR
 	}
 	member := &models.TKAPIMemberModel{}
