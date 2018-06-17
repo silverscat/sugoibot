@@ -22,6 +22,9 @@ func (b *Bot) handleGetMemberByReply(ev *slack.MessageEvent, args ...string) err
 		if err == constant.ERR_MEMBER_NOT_FOUND {
 			return errors.New("メンバーが見つかりませんでした。")
 		}
+		if err == constant.ERR_API_ERROR {
+			return errors.New("API内部エラーが発生しました。")
+		}
 		return err
 	}
 	memberPrivStr := ""
