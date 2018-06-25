@@ -76,6 +76,10 @@ func (b *Bot) handleMessageEvent(ev *slack.MessageEvent) error {
 		return b.handleMatsuya(ev, splitted[1:]...)
 	case "./help":
 		return b.handleHelp(ev, splitted[1:]...)
+	case "./okayama":
+		return b.handleOkayama(ev, splitted[1:]...)
+	case "./jain":
+		return b.handleJain(ev, splitted[1:]...)
 	default:
 		return b.handleDefault(ev)
 	}
